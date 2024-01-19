@@ -9,7 +9,7 @@ const fetchUsersData = async () => {
       
     } catch (error) {
       console.error('Error:' + error);
-    //   alert(error);
+      alert(error);
     }
   };
 
