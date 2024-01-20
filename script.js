@@ -19,7 +19,7 @@ const displayNames = (userData) => {
     userData.forEach((data) => {
       tableDisplay.innerHTML += `<tr>
             <th scope="row">${counter}</th>
-            <td>${data.name}</td>
+            <td class="name-element">${data.name}</td>
             </tr>`;
       counter++;
     });
@@ -34,7 +34,7 @@ const displayUsernames = (userData) => {
     userData.forEach((data) => {
       tableDisplay.innerHTML += `<tr>
               <th scope="row">${counter}</th>
-              <td>${data.username}</td>
+              <td class="username-element">${data.username}</td>
               </tr>`;
       counter++;
     });
@@ -49,7 +49,7 @@ const displayEmails = (userData) => {
     userData.forEach((data) => {
       tableDisplay.innerHTML += `<tr>
                 <th scope="row">${counter}</th>
-                <td>${data.email}</td>
+                <td class="email-element">${data.email}</td>
         </tr>`;
       counter++;
     });
@@ -83,28 +83,108 @@ showAll.addEventListener("click", () => {
   displayUserInfo(userData);
 });
 
+
+
 searchBar.addEventListener("keyup", () => {
   let tableRows = [...tableDisplay.querySelectorAll("tr")];
+  let resultsFound = false;
+
+  tableRows.forEach((el) => {
+    const name = el.querySelector(".name-element").innerText.toLowerCase();
+
+    if (
+      name.includes(searchBar.value.toLowerCase())
+    ) {
+      el.style.display = "block";
+      resultsFound = true;
+    } else {
+      el.style.display = "none";
+    }
+  });
+
+  if (resultsFound) {
+    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
+  } else {
+    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
+  }
+});
+
+searchBar.addEventListener("keyup", () => {
+  let tableRows = [...tableDisplay.querySelectorAll("tr")];
+  let resultsFound = false;
+
+  tableRows.forEach((el) => {
+    const username = el.querySelector(".username-element").innerText.toLowerCase();
+
+    if (
+      username.includes(searchBar.value.toLowerCase())
+    ) {
+      el.style.display = "block";
+      resultsFound = true;
+    } else {
+      el.style.display = "none";
+    }
+  });
+
+  if (resultsFound) {
+    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
+  } else {
+    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
+  }
+});
+
+searchBar.addEventListener("keyup", () => {
+  let tableRows = [...tableDisplay.querySelectorAll("tr")];
+  let resultsFound = false;
+
+  tableRows.forEach((el) => {
+    const email = el.querySelector(".email-element").innerText.toLowerCase();
+
+    if (
+      email.includes(searchBar.value.toLowerCase())
+    ) {
+      el.style.display = "block";
+      resultsFound = true;
+    } else {
+      el.style.display = "none";
+    }
+  });
+
+  if (resultsFound) {
+    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
+  } else {
+    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
+  }
+});
+
+
+    
+
+searchBar.addEventListener("keyup", () => {
+  let tableRows = [...tableDisplay.querySelectorAll("tr")];
+  let resultsFound = false;
+
   tableRows.forEach((el) => {
     const name = el.querySelector(".row-name-element").innerText.toLowerCase();
-    const username = el
-      .querySelector(".row-username-element")
-      .innerText.toLowerCase();
-    const email = el
-      .querySelector(".row-email-element")
-      .innerText.toLowerCase();
+    const username = el.querySelector(".row-username-element").innerText.toLowerCase();
+    const email = el.querySelector(".row-email-element").innerText.toLowerCase();
+
     if (
       name.includes(searchBar.value.toLowerCase()) ||
       username.includes(searchBar.value.toLowerCase()) ||
       email.includes(searchBar.value.toLowerCase())
     ) {
-      currentDipsplay.innerHTML = `
-      <th scope="col">Results:</th>`;
       el.style.display = "block";
+      resultsFound = true;
     } else {
-      currentDipsplay.innerHTML = `
-      <th scope="col">No results found</th>`;
       el.style.display = "none";
     }
   });
+
+  if (resultsFound) {
+    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
+  } else {
+    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
+  }
 });
+
