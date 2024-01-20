@@ -17,7 +17,7 @@ const displayNames = (userData) => {
     tableDisplay.innerHTML = "";
     currentDipsplay.innerHTML = `<th scope="col">Name</th>`;
     userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr>
+      tableDisplay.innerHTML += `<tr id="name-${data.id}">
             <th scope="row">${counter}</th>
             <td class="name-element">${data.name}</td>
             </tr>`;
@@ -32,7 +32,7 @@ const displayUsernames = (userData) => {
     tableDisplay.innerHTML = "";
     currentDipsplay.innerHTML = `<th scope="col">Username</th>`;
     userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr>
+      tableDisplay.innerHTML += `<tr id="username-${data.id}">
               <th scope="row">${counter}</th>
               <td class="username-element">${data.username}</td>
               </tr>`;
@@ -47,7 +47,7 @@ const displayEmails = (userData) => {
     tableDisplay.innerHTML = "";
     currentDipsplay.innerHTML = `<th scope="col">Email</th>`;
     userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr>
+      tableDisplay.innerHTML += `<tr id="email-${data.id}">
                 <th scope="row">${counter}</th>
                 <td class="email-element">${data.email}</td>
         </tr>`;
@@ -62,7 +62,7 @@ const displayUserInfo = (userData) => {
     <th scope="col">Name</th>
     <th scope="col">Username</th>
     <th scope="col">Email</th>`;
-    tableDisplay.innerHTML += `<tr>
+    tableDisplay.innerHTML += `<tr id="userInfo-${data.id}">
  <th scope="row">${counter}</th>
  <td class="row-name-element">${data.name}</td>
  <td class="row-username-element">${data.username}</td>
@@ -83,8 +83,6 @@ showAll.addEventListener("click", () => {
   displayUserInfo(userData);
 });
 
-
-
 searchBar.addEventListener("keyup", () => {
   let tableRows = [...tableDisplay.querySelectorAll("tr")];
   let resultsFound = false;
@@ -92,9 +90,7 @@ searchBar.addEventListener("keyup", () => {
   tableRows.forEach((el) => {
     const name = el.querySelector(".name-element").innerText.toLowerCase();
 
-    if (
-      name.includes(searchBar.value.toLowerCase())
-    ) {
+    if (name.includes(searchBar.value.toLowerCase())) {
       el.style.display = "block";
       resultsFound = true;
     } else {
@@ -114,11 +110,11 @@ searchBar.addEventListener("keyup", () => {
   let resultsFound = false;
 
   tableRows.forEach((el) => {
-    const username = el.querySelector(".username-element").innerText.toLowerCase();
+    const username = el
+      .querySelector(".username-element")
+      .innerText.toLowerCase();
 
-    if (
-      username.includes(searchBar.value.toLowerCase())
-    ) {
+    if (username.includes(searchBar.value.toLowerCase())) {
       el.style.display = "block";
       resultsFound = true;
     } else {
@@ -140,9 +136,7 @@ searchBar.addEventListener("keyup", () => {
   tableRows.forEach((el) => {
     const email = el.querySelector(".email-element").innerText.toLowerCase();
 
-    if (
-      email.includes(searchBar.value.toLowerCase())
-    ) {
+    if (email.includes(searchBar.value.toLowerCase())) {
       el.style.display = "block";
       resultsFound = true;
     } else {
@@ -157,17 +151,18 @@ searchBar.addEventListener("keyup", () => {
   }
 });
 
-
-    
-
 searchBar.addEventListener("keyup", () => {
   let tableRows = [...tableDisplay.querySelectorAll("tr")];
   let resultsFound = false;
 
   tableRows.forEach((el) => {
     const name = el.querySelector(".row-name-element").innerText.toLowerCase();
-    const username = el.querySelector(".row-username-element").innerText.toLowerCase();
-    const email = el.querySelector(".row-email-element").innerText.toLowerCase();
+    const username = el
+      .querySelector(".row-username-element")
+      .innerText.toLowerCase();
+    const email = el
+      .querySelector(".row-email-element")
+      .innerText.toLowerCase();
 
     if (
       name.includes(searchBar.value.toLowerCase()) ||
@@ -187,4 +182,3 @@ searchBar.addEventListener("keyup", () => {
     currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
   }
 });
-
