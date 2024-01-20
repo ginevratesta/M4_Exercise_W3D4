@@ -1,9 +1,6 @@
 import { fetchUsersData } from "./api.js";
-export { displayUserInfo };
 
-const dataObj = await fetchUsersData();
-const userData = dataObj.data;
-const ids = dataObj.ids;
+const userData = await fetchUsersData();
 
 let counter = 1;
 let tableDisplay = document.getElementById("table-display");
@@ -12,16 +9,15 @@ const filterByName = document.getElementById("name");
 const filterByUsername = document.getElementById("username");
 const filterByEmail = document.getElementById("email");
 const showAll = document.getElementById("show-all");
-const searchBar = document.getElementById("searchBar");
+const searchBar = document.getElementById("search-bar");
 
 const displayNames = (userData) => {
   filterByName.addEventListener("click", () => {
     counter = 1;
     tableDisplay.innerHTML = "";
-    currentDipsplay.innerHTML = `<th scope="col"></th>
-                                      <th scope="col">Name</th>`;
+    currentDipsplay.innerHTML = `<th scope="col">Name</th>`;
     userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr id="name-${data.id}">
+      tableDisplay.innerHTML += `<tr>
             <th scope="row">${counter}</th>
             <td>${data.name}</td>
             </tr>`;
@@ -34,10 +30,9 @@ const displayUsernames = (userData) => {
   filterByUsername.addEventListener("click", () => {
     counter = 1;
     tableDisplay.innerHTML = "";
-    currentDipsplay.innerHTML = `<th scope="col"></th>
-                                      <th scope="col">Username</th>`;
+    currentDipsplay.innerHTML = `<th scope="col">Username</th>`;
     userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr id="username-${data.id}">
+      tableDisplay.innerHTML += `<tr>
               <th scope="row">${counter}</th>
               <td>${data.username}</td>
               </tr>`;
@@ -50,10 +45,9 @@ const displayEmails = (userData) => {
   filterByEmail.addEventListener("click", () => {
     counter = 1;
     tableDisplay.innerHTML = "";
-    currentDipsplay.innerHTML = `<th scope="col"></th>
-                                      <th scope="col">Email</th>`;
+    currentDipsplay.innerHTML = `<th scope="col">Email</th>`;
     userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr id="mail-${data.id}">
+      tableDisplay.innerHTML += `<tr>
                 <th scope="row">${counter}</th>
                 <td>${data.email}</td>
         </tr>`;
@@ -62,35 +56,23 @@ const displayEmails = (userData) => {
   });
 };
 
-const filterUserData = (ids) => {
-  ids.forEach((id) => {
-    let trId = document.getElementById(`tr-${id}`);
-    console.log(trId);
-  });
-};
-
 const displayUserInfo = (userData) => {
   userData.forEach((data) => {
-    const name = data.name;
-    const email = data.email;
-    const username = data.username;
-    const id = data.id;
     currentDipsplay.innerHTML = `<th scope="col"></th>
     <th scope="col">Name</th>
     <th scope="col">Username</th>
-    <th scope="col">Email</th>`
-    tableDisplay.innerHTML += `<tr id="tr-${id}">
+    <th scope="col">Email</th>`;
+    tableDisplay.innerHTML += `<tr>
  <th scope="row">${counter}</th>
- <td>${name}</td>
- <td>${username}</td>
- <td>${email}</td>
+ <td class="row-name-element">${data.name}</td>
+ <td class="row-username-element">${data.username}</td>
+ <td class="row-email-element">${data.email}</td>
  </tr>`;
     counter++;
   });
   displayNames(userData);
   displayUsernames(userData);
   displayEmails(userData);
-  filterUserData(ids);
 };
 
 displayUserInfo(userData);
@@ -99,4 +81,30 @@ showAll.addEventListener("click", () => {
   counter = 1;
   tableDisplay.innerHTML = "";
   displayUserInfo(userData);
+});
+
+searchBar.addEventListener("keyup", () => {
+  let tableRows = [...tableDisplay.querySelectorAll("tr")];
+  tableRows.forEach((el) => {
+    const name = el.querySelector(".row-name-element").innerText.toLowerCase();
+    const username = el
+      .querySelector(".row-username-element")
+      .innerText.toLowerCase();
+    const email = el
+      .querySelector(".row-email-element")
+      .innerText.toLowerCase();
+    if (
+      name.includes(searchBar.value.toLowerCase()) ||
+      username.includes(searchBar.value.toLowerCase()) ||
+      email.includes(searchBar.value.toLowerCase())
+    ) {
+      currentDipsplay.innerHTML = `
+      <th scope="col">Results:</th>`;
+      el.style.display = "block";
+    } else {
+      currentDipsplay.innerHTML = `
+      <th scope="col">No results found</th>`;
+      el.style.display = "none";
+    }
+  });
 });
