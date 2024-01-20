@@ -1,87 +1,102 @@
 import { fetchUsersData } from "./api.js";
+export { displayUserInfo };
 
 const dataObj = await fetchUsersData();
-
 const userData = dataObj.data;
-const emails = dataObj.emails;
-const names = dataObj.names;
-const usernames = dataObj.usernames;
-console.log(emails, names, usernames, userData);
+const ids = dataObj.ids;
+
 let counter = 1;
 let tableDisplay = document.getElementById("table-display");
+let currentDipsplay = document.getElementById("current-display");
 const filterByName = document.getElementById("name");
 const filterByUsername = document.getElementById("username");
 const filterByEmail = document.getElementById("email");
 const showAll = document.getElementById("show-all");
+const searchBar = document.getElementById("searchBar");
 
-
-const displayNames = (names) => {
-    filterByName.addEventListener("click", () => {
-        counter = 1;
-        tableDisplay.innerHTML = "";
-        names.forEach((name) => {
-            tableDisplay.innerHTML += `<tr>
+const displayNames = (userData) => {
+  filterByName.addEventListener("click", () => {
+    counter = 1;
+    tableDisplay.innerHTML = "";
+    currentDipsplay.innerHTML = `<th scope="col"></th>
+                                      <th scope="col">Name</th>`;
+    userData.forEach((data) => {
+      tableDisplay.innerHTML += `<tr id="name-${data.id}">
             <th scope="row">${counter}</th>
-            <td>${name}</td>
+            <td>${data.name}</td>
             </tr>`;
-            counter++;
-        });
+      counter++;
     });
-  };
-
-  
-  const displayUsernames = (usernames) => {
-      filterByUsername.addEventListener("click", () => {
-          counter = 1;
-          tableDisplay.innerHTML = "";
-          usernames.forEach((username) => {
-              tableDisplay.innerHTML += `<tr>
-              <th scope="row">${counter}</th>
-              <td>${username}</td>
-              </tr>`;
-              counter++;
-            });
-        });
-    };
-    
-    
-    const displayEmails = (emails) => {
-        filterByEmail.addEventListener("click", () => {
-            counter = 1;
-            tableDisplay.innerHTML = "";
-            emails.forEach((email) => {
-                tableDisplay.innerHTML += `<tr>
-                <th scope="row">${counter}</th>
-                <td>${email}</td>
-        </tr>`;
-        counter++;
-      });
-    });
+  });
 };
 
+const displayUsernames = (userData) => {
+  filterByUsername.addEventListener("click", () => {
+    counter = 1;
+    tableDisplay.innerHTML = "";
+    currentDipsplay.innerHTML = `<th scope="col"></th>
+                                      <th scope="col">Username</th>`;
+    userData.forEach((data) => {
+      tableDisplay.innerHTML += `<tr id="username-${data.id}">
+              <th scope="row">${counter}</th>
+              <td>${data.username}</td>
+              </tr>`;
+      counter++;
+    });
+  });
+};
+
+const displayEmails = (userData) => {
+  filterByEmail.addEventListener("click", () => {
+    counter = 1;
+    tableDisplay.innerHTML = "";
+    currentDipsplay.innerHTML = `<th scope="col"></th>
+                                      <th scope="col">Email</th>`;
+    userData.forEach((data) => {
+      tableDisplay.innerHTML += `<tr id="mail-${data.id}">
+                <th scope="row">${counter}</th>
+                <td>${data.email}</td>
+        </tr>`;
+      counter++;
+    });
+  });
+};
+
+const filterUserData = (ids) => {
+  ids.forEach((id) => {
+    let trId = document.getElementById(`tr-${id}`);
+    console.log(trId);
+  });
+};
 
 const displayUserInfo = (userData) => {
   userData.forEach((data) => {
     const name = data.name;
     const email = data.email;
     const username = data.username;
-    tableDisplay.innerHTML += `<tr>
+    const id = data.id;
+    currentDipsplay.innerHTML = `<th scope="col"></th>
+    <th scope="col">Name</th>
+    <th scope="col">Username</th>
+    <th scope="col">Email</th>`
+    tableDisplay.innerHTML += `<tr id="tr-${id}">
  <th scope="row">${counter}</th>
  <td>${name}</td>
  <td>${username}</td>
  <td>${email}</td>
-</tr>`;
+ </tr>`;
     counter++;
   });
-  displayNames(names);
-  displayUsernames(usernames);
-  displayEmails(emails);
+  displayNames(userData);
+  displayUsernames(userData);
+  displayEmails(userData);
+  filterUserData(ids);
 };
 
 displayUserInfo(userData);
+
 showAll.addEventListener("click", () => {
-    counter = 1;
-    tableDisplay.innerHTML = "";
-    displayUserInfo(userData);
-  });
-  
+  counter = 1;
+  tableDisplay.innerHTML = "";
+  displayUserInfo(userData);
+});

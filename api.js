@@ -1,3 +1,5 @@
+export { fetchUsersData };
+
 const fetchUsersData = async () => {
     try {
       const res = await fetch('https://jsonplaceholder.typicode.com/users');
@@ -5,14 +7,14 @@ const fetchUsersData = async () => {
       const emails = data.map(data => data.email);
       const names = data.map(data => data.name);
       const usernames = data.map(data => data.username);
-      return {data, emails, names, usernames};
+      const ids = data.map(data => data.id);
+      return {data, emails, names, usernames, ids};
       
     } catch (error) {
       console.error('Error:' + error);
-      alert(error);
+      // alert(error);
     }
   };
 
   
-export { fetchUsersData };
  

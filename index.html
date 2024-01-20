@@ -17,13 +17,12 @@
 
     <!-- SEARCH-BAR -->
     <div class="input-group my-3 px-3">
-        <input type="text" class="form-control" placeholder="What are you looking for?" aria-label="Recipient's username" aria-describedby="button-addon2">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+        <input id="search-bar" type="text" class="form-control" placeholder="What are you looking for?" aria-label="Recipient's username" aria-describedby="button-addon2">
       </div>
       <!-- SEARCH-BAR END -->
 
       <!-- DROPDOWN OPTIONS -->
-      <div class="dropdown d-flex justify-content-end me-3">
+      <div class="dropdown d-flex justify-content-end me-3 mb-3">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Filter
         </button>
@@ -37,9 +36,10 @@
       <!-- DROPDOWN OPTIONS END -->
 
       <!-- TABLE -->
-      <table class="table table-striped">
+      <div class="px-5 w-100">
+      <table class="table table-striped w-100">
         <thead>
-          <tr>
+          <tr id="current-display">
             <th scope="col"></th>
             <th scope="col">Name</th>
             <th scope="col">Username</th>
@@ -55,6 +55,7 @@
           </tr> -->
         </tbody>
       </table>
+      </div>
       <!-- TABLE END -->
 
     <script
