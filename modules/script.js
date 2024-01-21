@@ -1,92 +1,114 @@
 import { fetchUsersData } from "./api.js";
-import {filterByName, filterByUsername, filterByEmail, showAll, searchBar} from "./components.js";
+import {
+  filterByName,
+  filterByUsername,
+  filterByEmail,
+  showAll,
+  searchBar
+} from "./components.js";
 
 const userData = await fetchUsersData();
 
 let counter = 1;
 let tableDisplay = document.getElementById("table-display");
-let currentDipsplay = document.getElementById("current-display");
+let currentDisplay = document.getElementById("current-display");
+let activeFilter = "all"; 
 
 const displayNames = (userData) => {
-  filterByName.addEventListener("click", () => {
-    counter = 1;
-    tableDisplay.innerHTML = "";
-    currentDipsplay.innerHTML = `<th scope="col">Name</th>`;
-    userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr id="name-${data.id}">
-            <th scope="row">${counter}</th>
-            <td class="name-element">${data.name}</td>
-            </tr>`;
-      counter++;
-    });
+  counter = 1;
+  tableDisplay.innerHTML = "";
+  currentDisplay.innerHTML = `<th scope="col">Name</th>`;
+  userData.forEach((data) => {
+    tableDisplay.innerHTML += `<tr id="name-${data.id}">
+      <th scope="row">${counter}</th>
+      <td class="name-element">${data.name}</td>
+    </tr>`;
+    counter++;
   });
 };
 
 const displayUsernames = (userData) => {
-  filterByUsername.addEventListener("click", () => {
-    counter = 1;
-    tableDisplay.innerHTML = "";
-    currentDipsplay.innerHTML = `<th scope="col">Username</th>`;
-    userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr id="username-${data.id}">
-              <th scope="row">${counter}</th>
-              <td class="username-element">${data.username}</td>
-              </tr>`;
-      counter++;
-    });
+  counter = 1;
+  tableDisplay.innerHTML = "";
+  currentDisplay.innerHTML = `<th scope="col">Username</th>`;
+  userData.forEach((data) => {
+    tableDisplay.innerHTML += `<tr id="username-${data.id}">
+      <th scope="row">${counter}</th>
+      <td class="username-element">${data.username}</td>
+    </tr>`;
+    counter++;
   });
 };
 
 const displayEmails = (userData) => {
-  filterByEmail.addEventListener("click", () => {
-    counter = 1;
-    tableDisplay.innerHTML = "";
-    currentDipsplay.innerHTML = `<th scope="col">Email</th>`;
-    userData.forEach((data) => {
-      tableDisplay.innerHTML += `<tr id="email-${data.id}">
-                <th scope="row">${counter}</th>
-                <td class="email-element">${data.email}</td>
-        </tr>`;
-      counter++;
-    });
+  counter = 1;
+  tableDisplay.innerHTML = "";
+  currentDisplay.innerHTML = `<th scope="col">Email</th>`;
+  userData.forEach((data) => {
+    tableDisplay.innerHTML += `<tr id="email-${data.id}">
+      <th scope="row">${counter}</th>
+      <td class="email-element">${data.email}</td>
+    </tr>`;
+    counter++;
   });
 };
 
 const displayUserInfo = (userData) => {
-  userData.forEach((data) => {
-    currentDipsplay.innerHTML = `<th scope="col"></th>
+  counter = 1;
+  currentDisplay.innerHTML = `<th scope="col"></th>
     <th scope="col">Name</th>
     <th scope="col">Username</th>
     <th scope="col">Email</th>`;
+  tableDisplay.innerHTML = "";
+  userData.forEach((data) => {
     tableDisplay.innerHTML += `<tr id="userInfo-${data.id}">
- <th scope="row">${counter}</th>
- <td class="row-name-element">${data.name}</td>
- <td class="row-username-element">${data.username}</td>
- <td class="row-email-element">${data.email}</td>
- </tr>`;
+      <th scope="row">${counter}</th>
+      <td class="row-name-element">${data.name}</td>
+      <td class="row-username-element">${data.username}</td>
+      <td class="row-email-element">${data.email}</td>
+    </tr>`;
     counter++;
   });
-  displayNames(userData);
-  displayUsernames(userData);
-  displayEmails(userData);
+};
+
+const updateFilter = (filter) => {
+  activeFilter = filter;
+  displayFilteredResults(userData);
+};
+
+const displayFilteredResults = (userData) => {
+  if (activeFilter === "name-element") {
+    displayNames(userData);
+  } else if (activeFilter === "username-element") {
+    displayUsernames(userData);
+  } else if (activeFilter === "email-element") {
+    displayEmails(userData);
+  } else {
+    displayUserInfo(userData);
+  }
 };
 
 displayUserInfo(userData);
 
-showAll.addEventListener("click", () => {
-  counter = 1;
-  tableDisplay.innerHTML = "";
-  displayUserInfo(userData);
-});
+filterByName.addEventListener("click", () => updateFilter("name-element"));
+filterByUsername.addEventListener("click", () => updateFilter("username-element"));
+filterByEmail.addEventListener("click", () => updateFilter("email-element"));
+showAll.addEventListener("click", () => updateFilter("all"));
 
-searchBar.addEventListener("keyup", () => {
+searchBar.addEventListener("keyup", () => filterTable());
+
+function filterTable() {
   let tableRows = [...tableDisplay.querySelectorAll("tr")];
   let resultsFound = false;
 
   tableRows.forEach((el) => {
-    const name = el.querySelector(".name-element").innerText.toLowerCase();
+    const values = activeFilter === "all"
+      ? ["row-name-element", "row-username-element", "row-email-element"].map((className) =>
+          el.querySelector(`.${className}`).innerText.toLowerCase()
+        )
+      : [el.querySelector(`.${activeFilter}`).innerText.toLowerCase()];
 
-    if (name.includes(searchBar.value.toLowerCase())) {
+    if (values.some((value) => value.includes(searchBar.value.toLowerCase()))) {
       el.style.display = "block";
       resultsFound = true;
     } else {
@@ -95,86 +117,8 @@ searchBar.addEventListener("keyup", () => {
   });
 
   if (resultsFound) {
-    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
+    currentDisplay.innerHTML = `<th scope="col">Results:</th>`;
   } else {
-    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
+    currentDisplay.innerHTML = `<th scope="col">No results found</th>`;
   }
-});
-
-searchBar.addEventListener("keyup", () => {
-  let tableRows = [...tableDisplay.querySelectorAll("tr")];
-  let resultsFound = false;
-
-  tableRows.forEach((el) => {
-    const username = el
-      .querySelector(".username-element")
-      .innerText.toLowerCase();
-
-    if (username.includes(searchBar.value.toLowerCase())) {
-      el.style.display = "block";
-      resultsFound = true;
-    } else {
-      el.style.display = "none";
-    }
-  });
-
-  if (resultsFound) {
-    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
-  } else {
-    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
-  }
-});
-
-searchBar.addEventListener("keyup", () => {
-  let tableRows = [...tableDisplay.querySelectorAll("tr")];
-  let resultsFound = false;
-
-  tableRows.forEach((el) => {
-    const email = el.querySelector(".email-element").innerText.toLowerCase();
-
-    if (email.includes(searchBar.value.toLowerCase())) {
-      el.style.display = "block";
-      resultsFound = true;
-    } else {
-      el.style.display = "none";
-    }
-  });
-
-  if (resultsFound) {
-    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
-  } else {
-    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
-  }
-});
-
-searchBar.addEventListener("keyup", () => {
-  let tableRows = [...tableDisplay.querySelectorAll("tr")];
-  let resultsFound = false;
-
-  tableRows.forEach((el) => {
-    const name = el.querySelector(".row-name-element").innerText.toLowerCase();
-    const username = el
-      .querySelector(".row-username-element")
-      .innerText.toLowerCase();
-    const email = el
-      .querySelector(".row-email-element")
-      .innerText.toLowerCase();
-
-    if (
-      name.includes(searchBar.value.toLowerCase()) ||
-      username.includes(searchBar.value.toLowerCase()) ||
-      email.includes(searchBar.value.toLowerCase())
-    ) {
-      el.style.display = "block";
-      resultsFound = true;
-    } else {
-      el.style.display = "none";
-    }
-  });
-
-  if (resultsFound) {
-    currentDipsplay.innerHTML = `<th scope="col">Results:</th>`;
-  } else {
-    currentDipsplay.innerHTML = `<th scope="col">No results found</th>`;
-  }
-});
+}
