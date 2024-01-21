@@ -1,15 +1,11 @@
 import { fetchUsersData } from "./api.js";
+import {filterByName, filterByUsername, filterByEmail, showAll, searchBar} from "./components.js";
 
 const userData = await fetchUsersData();
 
 let counter = 1;
 let tableDisplay = document.getElementById("table-display");
 let currentDipsplay = document.getElementById("current-display");
-const filterByName = document.getElementById("name");
-const filterByUsername = document.getElementById("username");
-const filterByEmail = document.getElementById("email");
-const showAll = document.getElementById("show-all");
-const searchBar = document.getElementById("search-bar");
 
 const displayNames = (userData) => {
   filterByName.addEventListener("click", () => {
